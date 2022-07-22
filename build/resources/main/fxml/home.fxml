@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import edu.snhu.library.javafx.MultiValueCellValueFactory?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.*?>
+<AnchorPane prefHeight="768.0" prefWidth="1024.0" stylesheets="@/css/global.css,@/css/home.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.snhu.library.controllers.HomeController">
+    <children>
+        <BorderPane prefHeight="768.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <top>
+                <VBox BorderPane.alignment="CENTER">
+                    <children>
+                        <MenuBar fx:id="menuBar">
+                            <menus>
+                                <Menu text="_File">
+                                    <items>
+                                        <MenuItem fx:id="mnuNewBook" onAction="#addBook" text="_New book">
+                                            <graphic>
+                                                <Region styleClass="svg-icon" />
+                                            </graphic>
+                                            <text>_New book</text>
+                                        </MenuItem>
+                                        <SeparatorMenuItem />
+                                        <MenuItem fx:id="mnuExit" onAction="#exitProgram" text="E_xit">
+                                            <graphic>
+                                                <Region styleClass="svg-icon" />
+                                            </graphic>
+                                            <text>E_xit</text>
+                                        </MenuItem>
+                                    </items>
+                                </Menu>
+                                <Menu text="_Edit">
+                                    <items>
+                                        <MenuItem fx:id="mnuEditSelectedBook" onAction="#editSelectedBook">
+                                            <graphic>
+                                                <Region styleClass="svg-icon" />
+                                            </graphic>
+                                            <text>_Edit book...</text>
+                                        </MenuItem>
+                                    </items>
+                                </Menu>
+                                <Menu text="_Help">
+                                    <items>
+                                        <MenuItem onAction="#showAboutDialog" text="_About" />
+                                    </items>
+                                </Menu>
+                            </menus>
+                        </MenuBar>
+                        <ToolBar fx:id="toolbar">
+                            <Button fx:id="add" mnemonicParsing="false" onAction="#addBook">
+                                <graphic>
+                                    <Region styleClass="svg-icon"/>
+                                </graphic>
+                                <text>Add Book</text>
+                            </Button>
+                            <Button fx:id="remove" mnemonicParsing="false" onAction="#removeBook">
+                                <graphic>
+                                    <Region styleClass="svg-icon"/>
+                                </graphic>
+                                <text>Remove Book</text>
+                            </Button>
+                            <Pane HBox.hgrow="ALWAYS"/>
+                            <TextField fx:id="filterInput" promptText="Filter..." />
+                        </ToolBar>
+                    </children>
+                </VBox>
+            </top>
+            <center>
+                <TableView fx:id="booksTableView" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                        <TableColumn fx:id="titleColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="300.0" text="Title">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="title" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="authorsColumn" editable="false" maxWidth="-1.0" minWidth="300.0" prefWidth="300.0" text="Author">
+                            <cellValueFactory>
+                                <MultiValueCellValueFactory property="author" separator="; " />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="tagsColumn" editable="false" maxWidth="-1.0" minWidth="300.0" prefWidth="300.0" text="Tags">
+                            <cellValueFactory>
+                                <MultiValueCellValueFactory property="tags" />
+                            </cellValueFactory>
+                        </TableColumn>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </center>
+        </BorderPane>
+    </children>
+</AnchorPane>

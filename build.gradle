@@ -1,0 +1,90 @@
+import java.text.SimpleDateFormat
+
+plugins {
+	id 'application'
+	id 'org.springframework.boot' version '2.7.1'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'org.openjfx.javafxplugin' version '0.0.13'
+	id 'org.beryx.jlink' version '2.25.0'
+}
+
+group = 'edu.snhu'
+version = '0.0.1-SNAPSHOT'
+
+ext {
+	buildDate=(new SimpleDateFormat("dd-MMM-yyyy HH:mm")).format(new Date())
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+
+
+processResources {
+	filesMatching('*.properties') {
+		expand(project.properties)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+application {
+	mainModule = 'library.main'
+	mainClass = 'edu.snhu.library.SnhuLibraryApp'
+}
+
+bootRun {
+	modularity.inferModulePath=true
+	mainModule = 'library.main'
+	mainClass = 'edu.snhu.library.SnhuLibraryApp'
+}
+
+java {
+	modularity.inferModulePath=true
+	sourceCompatibility = '17'
+	targetCompatibility = '17'
+}
+
+javafx {
+	version = '17.0.2'
+	modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics']
+}
+
+jlink {
+	options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+	launcher {
+		name = 'snhulibrary'
+	}
+}
+
+configurations {
+	all {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.data:spring-data-commons'
+
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+	// Embedded MongDB
+	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

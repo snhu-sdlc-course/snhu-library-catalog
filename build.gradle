@@ -14,6 +14,12 @@ version = '0.0.1-SNAPSHOT'
 
 ext {
 	buildDate=(new SimpleDateFormat("dd-MMM-yyyy HH:mm")).format(new Date())
+	moduleName="edu.snhu.library"
+}
+
+application {
+	mainModule="edu.snhu.library"
+	mainClass="edu.snhu.library.JavaFxApplication"
 }
 
 configurations {
@@ -21,8 +27,6 @@ configurations {
 		extendsFrom annotationProcessor
 	}
 }
-
-
 
 processResources {
 	filesMatching('*.properties') {
@@ -34,39 +38,49 @@ repositories {
 	mavenCentral()
 }
 
-application {
-	mainModule = 'library.main'
-	mainClass = 'edu.snhu.library.SnhuLibraryApp'
-}
-
-bootRun {
-	modularity.inferModulePath=true
-	mainModule = 'library.main'
-	mainClass = 'edu.snhu.library.SnhuLibraryApp'
-}
-
 java {
-	modularity.inferModulePath=true
 	sourceCompatibility = '17'
 	targetCompatibility = '17'
+	modularity.inferModulePath = true
+}
+
+compileJava {
+	inputs.property("moduleName", moduleName)
+}
+
+jar {
+	inputs.property("moduleName", moduleName)
+	manifest {
+		attributes('Automatic-Module-Name': moduleName)
+	}
 }
 
 javafx {
 	version = '17.0.2'
 	modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics']
+	configuration = "compileOnly"
 }
 
 jlink {
 	options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
-	launcher {
-		name = 'snhulibrary'
-	}
 }
 
 configurations {
 	all {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
 	}
+}
+
+var os;
+switch(System.getProperty("os.name").toLowerCase().split(' ')[0]) {
+	case 'windows':
+		os='win'
+		break;
+	case 'linux':
+		os='linux'
+		break;
+	default:
+		os='mac'
 }
 
 dependencies {
@@ -79,6 +93,12 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
 
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+	// JavaFX
+	implementation "org.openjfx:javafx-base:17.0.2:${os}"
+	implementation "org.openjfx:javafx-controls:17.0.2:${os}"
+	implementation "org.openjfx:javafx-fxml:17.0.2:${os}"
+	implementation "org.openjfx:javafx-graphics:17.0.2:${os}"
 
 	// Embedded MongDB
 	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'

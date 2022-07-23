@@ -1,7 +1,8 @@
-open module library.main {
+open module edu.snhu.library {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.fxml;
+    requires javafx.base;
     requires java.annotation;
     requires java.sql;
     requires spring.core;
@@ -19,10 +20,12 @@ open module library.main {
     requires org.mongodb.driver.sync.client;
     requires org.apache.logging.log4j;
     requires org.apache.commons.lang3;
-    requires lombok;
+    requires static lombok;
     requires spring.boot.autoconfigure;
     requires de.flapdoodle.embed.mongo;
     requires de.flapdoodle.embed.mongo.packageresolver;
     requires de.flapdoodle.embed.process;
     requires de.flapdoodle.os;
+
+    exports edu.snhu.library;
 }

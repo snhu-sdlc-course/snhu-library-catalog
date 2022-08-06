@@ -1,8 +1,8 @@
 open module edu.snhu.library {
     requires javafx.controls;
-    requires javafx.graphics;
     requires javafx.fxml;
     requires javafx.base;
+    requires javafx.graphics;
     requires java.annotation;
     requires java.sql;
     requires spring.core;

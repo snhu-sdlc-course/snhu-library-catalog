@@ -6,13 +6,16 @@ import edu.snhu.library.services.FxmlRootProvider;
 import edu.snhu.library.viewmodels.HomeViewModel;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.controlsfx.control.CheckComboBox;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -31,17 +34,21 @@ public class HomeController {
     private final FxmlRootProvider fxmlRootProvider;
     private final String appTitle;
 
+    @Setter
     @FXML
     private MenuBar menuBar;
 
+    @Setter
     @FXML
     private TableView<Book> booksTableView;
 
-    @FXML
-    private TableColumn<Book, String> titleColumn;
-
+    @Setter
     @FXML
     private TextInputControl filterInput;
+
+    @Setter
+    @FXML
+    private CheckComboBox<String> genreFilter;
 
     HomeController(
             final Application application,
@@ -79,9 +86,18 @@ public class HomeController {
         // Set up filter property
         filterInput.textProperty().bindBidirectional(viewModel.getFilterProperty());
 
+        // Set up genre filter
+        genreFilter.getCheckModel().getCheckedItems().addListener((ListChangeListener<? super String>) c -> viewModel.getSelectedGenres().setAll(c.getList()));
+
         // Load the database to the list
         getViewModel().loadBooks();
-        booksTableView.setItems(getViewModel().getBooks());
+
+        // Load genres
+        getViewModel().loadGenres();
+
+        // Update the genereFilter from viewcontroller
+        genreFilter.getItems().addAll(viewModel.getGenres());
+        viewModel.getGenres().addListener((ListChangeListener<String>) c -> genreFilter.getItems().setAll(c.getList()));
 
         // Offload the task of sorting to the database
         booksTableView.setSortPolicy(tv -> {
@@ -124,6 +140,7 @@ public class HomeController {
     public void addBook() {
         addBookController.show(menuBar.getScene().getWindow()).thenAccept(results -> {
             if(results.status() == ModalResultStatus.CREATED) {
+                viewModel.loadGenres();
                 viewModel.loadBooks();
                 booksTableView.sort();
 
@@ -151,6 +168,7 @@ public class HomeController {
     public void editBook(final Book book) {
         editBookController.show(menuBar.getScene().getWindow(), book).thenAccept(results -> {
             if(results.status() == ModalResultStatus.UPDATED) {
+                viewModel.loadGenres();
                 viewModel.loadBooks();
                 booksTableView.sort();
 

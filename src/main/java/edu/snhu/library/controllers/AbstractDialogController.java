@@ -38,12 +38,12 @@ public abstract class AbstractDialogController<T> implements DialogController<T>
     }
 
     @Override
-    public CompletableFuture<ModalResult<T>> show(Window parent, Object... args) {
-        final Optional<Scene> optAddBook = fxmlRootProvider.getRoot(this, fxmlFileName);
+    public CompletableFuture<ModalResult<T>> show(final Window parent, final Object... args) {
+        final Optional<Scene> optScene = fxmlRootProvider.getRoot(this, fxmlFileName);
 
         promise = new CompletableFuture<>();
 
-        optAddBook.ifPresent(scene -> {
+        optScene.ifPresent(scene -> {
             modalDialog = new Stage();
             modalDialog.setTitle(getSceneTitle());
             modalDialog.setScene(scene);
@@ -55,7 +55,7 @@ public abstract class AbstractDialogController<T> implements DialogController<T>
                 promise.complete(new ModalResult(ModalResultStatus.CLOSED, null));
             });
         });
-        if(optAddBook.isEmpty()) return CompletableFuture.failedFuture(new FxmlFileNotLoadedException(fxmlFileName));
+        if(optScene.isEmpty()) return CompletableFuture.failedFuture(new FxmlFileNotLoadedException(fxmlFileName));
         return promise;
     }
 }

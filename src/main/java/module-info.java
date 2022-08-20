@@ -3,6 +3,7 @@ open module edu.snhu.library {
     requires javafx.fxml;
     requires javafx.base;
     requires javafx.graphics;
+    requires org.controlsfx.controls;
     requires java.annotation;
     requires java.sql;
     requires spring.core;
@@ -26,6 +27,4 @@ open module edu.snhu.library {
     requires de.flapdoodle.embed.mongo.packageresolver;
     requires de.flapdoodle.embed.process;
     requires de.flapdoodle.os;
-
-    exports edu.snhu.library;
 }

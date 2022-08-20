@@ -17,7 +17,7 @@ public class MultiValueCellValueFactory<S> extends PropertyValueFactory<S, Strin
      * @param property The name of the property with which to attempt to
      *                 reflectively extract a corresponding value for in a given object.
      */
-    public MultiValueCellValueFactory(@NamedArg("property") String property, @NamedArg(value = "separator", defaultValue = ";") String separator) {
+    public MultiValueCellValueFactory(@NamedArg("property") String property, @NamedArg(value = "separator", defaultValue = "; ") String separator) {
         super(property);
         this.separator = separator;
     }

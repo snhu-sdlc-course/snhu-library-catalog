@@ -8,10 +8,18 @@ plugins {
 	id 'org.openjfx.javafxplugin' version '0.0.13'
 	id 'org.beryx.jlink' version '2.25.0'
 	id 'eclipse'
+	id 'idea'
 }
 
 group = 'edu.snhu'
 version = '0.0.1-SNAPSHOT'
+
+idea {
+	module {
+		testSourceDirs += file("$projectDir/src/integration/java")
+		testResourceDirs += [file("$projectDir/src/integration/resources"), file("$projectDir/src/test/resources")]
+	}
+}
 
 ext {
 	buildDate=(new SimpleDateFormat("dd-MMM-yyyy HH:mm")).format(new Date())
@@ -58,7 +66,7 @@ jar {
 
 javafx {
 	version = '17.0.2'
-	modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics']
+	modules = [ 'javafx.base', 'javafx.controls', 'javafx.fxml', 'javafx.graphics']
 }
 
 jlink {
@@ -69,16 +77,50 @@ configurations {
 	all {
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
 	}
+
+	//	integrationCompile.extendsFrom(testCompile)
+	//	integrationRuntime.extendsFrom(integrationCompile)
 }
 
-var os;
+//compileTestJava {
+//	exclude '*module-info*'
+//}
+test {
+	useJUnitPlatform()
+
+	testLogging {     // This is for logging and can be removed.
+		events = ["passed", "skipped", "failed"]
+	}
+
+	doFirst {
+		jvmArgs = [
+				'--add-exports', 'javafx.base/com.sun.javafx.beans=net.bytebuddy',
+				'--add-reads', "$moduleName=org.mockito.junit.jupiter",
+				'--add-reads', "$moduleName=javafx.fxml",
+		]
+	}
+
+}
+
+//sourceSets {
+//	integration {
+//		java {
+//			srcDirs += "$projectDir/src/integration/java"
+//			compileClasspath += main.output + configurations.integrationCompile
+//			runtimeClasspath += output + compileClasspath + configurations.integrationRuntime
+//		}
+//		resources.srcDirs += "$projectDir/src/it/java"
+//	}
+//}
+
+var os
 switch(System.getProperty("os.name").toLowerCase().split(' ')[0]) {
 	case 'windows':
 		os='win'
-		break;
+		break
 	case 'linux':
 		os='linux'
-		break;
+		break
 	default:
 		os='mac'
 }
@@ -99,12 +141,23 @@ dependencies {
 	implementation "org.openjfx:javafx-controls:17.0.2:${os}"
 	implementation "org.openjfx:javafx-fxml:17.0.2:${os}"
 	implementation "org.openjfx:javafx-graphics:17.0.2:${os}"
+	implementation "org.controlsfx:controlsfx:11.1.1"
 
-	// Embedded MongDB
+	// Embedded MongoDB
 	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testCompileOnly 'org.projectlombok:lombok:1.18.22'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'com.vaadin.external.google', module: 'android-json'
+	}
 }
+
+//task integrationTest(type: Test) {
+//	testClassesDirs = sourceSets.integration.output.classesDirs
+//	classpath = sourceSets.integration.runtimeClasspath
+//}

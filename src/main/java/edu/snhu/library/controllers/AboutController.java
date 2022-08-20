@@ -3,6 +3,7 @@ package edu.snhu.library.controllers;
 import edu.snhu.library.services.FxmlRootProvider;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -17,12 +18,15 @@ public class AboutController extends AbstractDialogController<Void> {
     private final String buildDate;
     private final String javaVersion;
 
+    @Setter
     @FXML
     private Label lblVersion;
 
+    @Setter
     @FXML
     private Label lblBuildDate;
 
+    @Setter
     @FXML
     private Label lblJavaVersion;
 
@@ -32,7 +36,7 @@ public class AboutController extends AbstractDialogController<Void> {
             @Value("${edu.snhu.library.javaVersion}") final String javaVersion,
             final FxmlRootProvider fxmlRootProvider
     ) {
-        super("About SNHU Library Catalog", "about.fxml", fxmlRootProvider);
+        super("About SNHU Software Technical Catalog", "about.fxml", fxmlRootProvider);
         this.version = version;
         this.buildDate = buildDate;
         this.javaVersion = javaVersion;

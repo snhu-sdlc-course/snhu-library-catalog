@@ -21,7 +21,6 @@ public class FxmlRootProvider {
     public Optional<Scene> getRoot(final Object controller, final String relativePath) {
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(FxmlRootProvider.class.getClassLoader().getResource(Path.of("fxml/", relativePath).toString()));
-//            fxmlLoader.setControllerFactory(ctx::getBean);
             fxmlLoader.setControllerFactory(clazz -> {
                 if(clazz.isAssignableFrom(controller.getClass())) {
                     return controller;

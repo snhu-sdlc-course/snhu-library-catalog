@@ -68,7 +68,7 @@ public class HomeViewModel {
         genres.setAll("Action", "Documentary", "War");
     }
 
-    private void updateBooks(final Collection<Book> books) {
+    void updateBooks(final Collection<Book> books) {
         this.books.clear();
         this.books.addAll(books);
     }

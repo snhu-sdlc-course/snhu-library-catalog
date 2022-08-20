@@ -68,7 +68,12 @@ class HomeControllerTest {
 
     @TestInJfxThread
     @Test
-    void initialize(@Mock final TableView<Book> booksTableView, @Mock final TextInputControl filterInput, @Mock final CheckComboBox<String> genreFilter, @Mock final IndexedCheckModel checkModel) {
+    void initialize(
+            @Mock final TableView<Book> booksTableView,
+            @Mock final TextInputControl filterInput,
+            @Mock final CheckComboBox<String> genreFilter,
+            @Mock final IndexedCheckModel checkModel)
+    {
         // Mock out necessary components
         when(viewModel.getFilterProperty()).thenReturn(new SimpleStringProperty());
         when(viewModel.getGenres()).thenReturn(FXCollections.emptyObservableList());

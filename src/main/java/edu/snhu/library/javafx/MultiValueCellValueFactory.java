@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class MultiValueCellValueFactory<S> extends PropertyValueFactory<S, String> {
@@ -34,7 +35,7 @@ public class MultiValueCellValueFactory<S> extends PropertyValueFactory<S, Strin
 
     String formatToSingleLine(final String originalValue) {
         if(StringUtils.isNotBlank(originalValue)) {
-            return StringUtils.replace(originalValue, "\n", separator);
+            return RegExUtils.replaceAll(originalValue, "\n+", separator);
         }
         return "";
     }
